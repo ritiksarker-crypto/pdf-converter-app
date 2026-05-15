@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Forge — Free HTML to PDF Converter</title>
+    <meta name="description" content="Convert HTML to PDF for free. No sign-up, no server, no limits. Paste HTML or chat to generate beautiful PDFs instantly in your browser.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+
+    <!-- Header -->
+    <header id="app-header">
+        <div class="header-inner">
+            <div class="logo" id="logo">
+                <div class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                        <rect x="2" y="4" width="18" height="22" rx="3" stroke="url(#logoGrad)" stroke-width="2"/>
+                        <path d="M8 10H16M8 14H14M8 18H12" stroke="url(#logoGrad)" stroke-width="1.5" stroke-linecap="round"/>
+                        <rect x="8" y="2" width="18" height="22" rx="3" fill="url(#logoGrad)" opacity="0.15"/>
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28">
+                                <stop stop-color="#a78bfa"/>
+                                <stop offset="1" stop-color="#6366f1"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">PDF Forge</span>
+                <span class="logo-badge">FREE</span>
+            </div>
+            <nav class="header-nav">
+                <button class="nav-tab active" data-tab="editor" id="nav-editor">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 6h8M2 9h10M2 12h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    Editor
+                </button>
+                <button class="nav-tab" data-tab="chat" id="nav-chat">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 3a1 1 0 011-1h10a1 1 0 011 1v7a1 1 0 01-1 1H5l-3 3V3z" stroke="currentColor" stroke-width="1.5"/></svg>
+                    Chat
+                </button>
+                <button class="nav-tab" data-tab="api" id="nav-api">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4l-2 4 2 4M12 4l2 4-2 4M9 2l-2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    API
+                </button>
+            </nav>
+            <div class="header-actions">
+                <button class="btn-download" id="btn-download" title="Download PDF">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2v10M9 12l-3-3M9 12l3-3M3 14h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Download PDF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app-main">
+        <!-- Editor Tab -->
+        <section class="tab-content active" id="tab-editor">
+            <div class="editor-layout">
+                <div class="panel editor-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <div class="dot-indicators">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                            </div>
+                            <span>HTML Code</span>
+                        </div>
+                        <div class="panel-actions">
+                            <button class="btn-icon" id="btn-paste" title="Paste from clipboard">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 3V2a1 1 0 011-1h4a1 1 0 011 1v1M3 3h8a1 1 0 011 1v9a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.2"/></svg>
+                            </button>
+                            <button class="btn-icon" id="btn-clear" title="Clear editor">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M5 4V3h4v1M3 4v8a1 1 0 001 1h6a1 1 0 001-1V4" stroke="currentColor" stroke-width="1.2"/></svg>
+                            </button>
+                            <button class="btn-icon" id="btn-format" title="Format HTML">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3h10M4 6h8M2 9h10M4 12h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="editor-wrap">
+                        <textarea id="html-editor" spellcheck="false" placeholder="Paste your HTML here...
+
+Example:
+<h1>Hello World</h1>
+<p>This will be converted to PDF</p>"></textarea>
+                        <div class="editor-line-numbers" id="line-numbers"></div>
+                    </div>
+                </div>
+                <div class="panel-divider" id="panel-divider">
+                    <div class="divider-handle"></div>
+                </div>
+                <div class="panel preview-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2" fill="currentColor"/></svg>
+                            <span>Live Preview</span>
+                        </div>
+                        <div class="panel-actions">
+                            <select id="page-size" class="select-control" title="Page size">
+                                <option value="a4">A4</option>
+                                <option value="letter">Letter</option>
+                                <option value="legal">Legal</option>
+                            </select>
+                            <select id="orientation" class="select-control" title="Orientation">
+                                <option value="portrait">Portrait</option>
+                                <option value="landscape">Landscape</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="preview-wrap">
+                        <div class="preview-page" id="preview-page">
+                            <div id="preview-content" class="preview-content">
+                                <div class="preview-placeholder">
+                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="8" y="6" width="32" height="36" rx="4" stroke="currentColor" stroke-width="2" opacity="0.3"/><path d="M16 18h16M16 24h12M16 30h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.3"/></svg>
+                                    <p>Your PDF preview will appear here</p>
+                                    <span>Paste HTML in the editor or use Chat</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Tab -->
+        <section class="tab-content" id="tab-chat">
+            <div class="chat-layout">
+                <div class="chat-panel">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="chat-welcome">
+                            <div class="chat-welcome-icon">
+                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                    <circle cx="20" cy="20" r="18" stroke="url(#chatGrad)" stroke-width="2"/>
+                                    <path d="M14 22c0 0 2 4 6 4s6-4 6-4" stroke="url(#chatGrad)" stroke-width="2" stroke-linecap="round"/>
+                                    <circle cx="15" cy="16" r="1.5" fill="url(#chatGrad)"/>
+                                    <circle cx="25" cy="16" r="1.5" fill="url(#chatGrad)"/>
+                                    <defs>
+                                        <linearGradient id="chatGrad" x1="0" y1="0" x2="40" y2="40">
+                                            <stop stop-color="#a78bfa"/>
+                                            <stop offset="1" stop-color="#6366f1"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <h2>Chat to Generate PDF</h2>
+                            <p>Describe the document you want, and I'll generate the HTML for you.</p>
+                            <div class="chat-suggestions">
+                                <button class="suggestion-chip" data-prompt="Create a professional invoice for a freelance web developer">📄 Invoice</button>
+                                <button class="suggestion-chip" data-prompt="Create a modern resume/CV for a software engineer">📋 Resume</button>
+                                <button class="suggestion-chip" data-prompt="Create a business letter with company letterhead">✉️ Letter</button>
+                                <button class="suggestion-chip" data-prompt="Create a certificate of completion for an online course">🏆 Certificate</button>
+                                <button class="suggestion-chip" data-prompt="Create a receipt for a restaurant order">🧾 Receipt</button>
+                                <button class="suggestion-chip" data-prompt="Create a report cover page with table of contents">📊 Report</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <div class="chat-input-wrap">
+                            <textarea id="chat-input" placeholder="Describe the PDF you want to create..." rows="1"></textarea>
+                            <button class="btn-send" id="btn-send" title="Send message">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 9l6-6M2 9l6 6M2 9h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="rotate(-90 9 9)"/></svg>
+                            </button>
+                        </div>
+                        <p class="chat-disclaimer">Generates HTML templates locally. No data sent to external servers.</p>
+                    </div>
+                </div>
+                <div class="chat-preview-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.2"/><circle cx="7" cy="7" r="2" fill="currentColor"/></svg>
+                            <span>Preview</span>
+                        </div>
+                        <button class="btn-use-html" id="btn-use-in-editor" title="Open in Editor">
+                            Open in Editor →
+                        </button>
+                    </div>
+                    <div class="preview-wrap">
+                        <div class="preview-page" id="chat-preview-page">
+                            <div id="chat-preview-content" class="preview-content">
+                                <div class="preview-placeholder">
+                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M10 10a2 2 0 012-2h24a2 2 0 012 2v20a2 2 0 01-2 2H18l-8 8V10z" stroke="currentColor" stroke-width="2" opacity="0.3"/><path d="M16 16h16M16 22h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.3"/></svg>
+                                    <p>Chat preview will appear here</p>
+                                    <span>Use suggestions or type a prompt</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Tab -->
+        <section class="tab-content" id="tab-api">
+            <div class="api-layout">
+                <div class="api-content">
+                    <div class="api-hero">
+                        <div class="api-hero-icon">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                <path d="M8 12l-4 12 4 12M40 12l4 12-4 12M28 6l-8 36" stroke="url(#apiGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <defs>
+                                    <linearGradient id="apiGrad" x1="0" y1="0" x2="48" y2="48">
+                                        <stop stop-color="#a78bfa"/>
+                                        <stop offset="1" stop-color="#6366f1"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h2>API / HTTP Integration</h2>
+                        <p>Use these code snippets to convert HTML to PDF programmatically from any application.</p>
+                    </div>
+
+                    <div class="api-cards">
+                        <!-- JavaScript -->
+                        <div class="api-card">
+                            <div class="api-card-header">
+                                <span class="api-lang-badge js">JavaScript</span>
+                                <button class="btn-copy" data-target="code-js" title="Copy code">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="4" y="4" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M10 4V2.5A1.5 1.5 0 008.5 1h-6A1.5 1.5 0 001 2.5v6A1.5 1.5 0 002.5 10H4" stroke="currentColor" stroke-width="1.2"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="api-code" id="code-js"><code>// Client-side HTML to PDF (using html2pdf.js)
+// Include: &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"&gt;&lt;/script&gt;
+
+const htmlContent = `
+  &lt;h1&gt;My Document&lt;/h1&gt;
+  &lt;p&gt;Generated via API call&lt;/p&gt;
+`;
+
+// Create a temporary container
+const container = document.createElement('div');
+container.innerHTML = htmlContent;
+document.body.appendChild(container);
+
+// Generate PDF
+html2pdf()
+  .set({
+    margin: 10,
+    filename: 'document.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  })
+  .from(container)
+  .save()
+  .then(() => container.remove());</code></pre>
+                        </div>
+
+                        <!-- Python -->
+                        <div class="api-card">
+                            <div class="api-card-header">
+                                <span class="api-lang-badge py">Python</span>
+                                <button class="btn-copy" data-target="code-py" title="Copy code">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="4" y="4" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M10 4V2.5A1.5 1.5 0 008.5 1h-6A1.5 1.5 0 001 2.5v6A1.5 1.5 0 002.5 10H4" stroke="currentColor" stroke-width="1.2"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="api-code" id="code-py"><code># Free: Using weasyprint (pip install weasyprint)
+from weasyprint import HTML
+
+html_content = """
+&lt;h1&gt;My Document&lt;/h1&gt;
+&lt;p&gt;Generated with Python&lt;/p&gt;
+"""
+
+HTML(string=html_content).write_pdf('output.pdf')
+print("PDF created successfully!")</code></pre>
+                        </div>
+
+                        <!-- cURL / n8n -->
+                        <div class="api-card">
+                            <div class="api-card-header">
+                                <span class="api-lang-badge curl">n8n / HTTP</span>
+                                <button class="btn-copy" data-target="code-n8n" title="Copy code">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="4" y="4" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M10 4V2.5A1.5 1.5 0 008.5 1h-6A1.5 1.5 0 001 2.5v6A1.5 1.5 0 002.5 10H4" stroke="currentColor" stroke-width="1.2"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="api-code" id="code-n8n"><code>// n8n Workflow (Free Self-Hosted)
+// 1. Use "HTML" node to build your template
+// 2. Use "Execute Command" node with:
+
+{
+  "command": "echo '{{ $json.html }}' | wkhtmltopdf - output.pdf",
+  "note": "Requires wkhtmltopdf installed on server"
+}
+
+// Alternative: Use Gotenberg (free Docker service)
+// POST http://localhost:3000/forms/chromium/convert/html
+// Form data: files = your.html</code></pre>
+                        </div>
+
+                        <!-- Bookmarklet -->
+                        <div class="api-card">
+                            <div class="api-card-header">
+                                <span class="api-lang-badge bm">Bookmarklet</span>
+                                <button class="btn-copy" data-target="code-bm" title="Copy code">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="4" y="4" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M10 4V2.5A1.5 1.5 0 008.5 1h-6A1.5 1.5 0 001 2.5v6A1.5 1.5 0 002.5 10H4" stroke="currentColor" stroke-width="1.2"/></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre class="api-code" id="code-bm"><code>// Drag this to your bookmarks bar to convert any webpage:
+javascript:void(function(){
+  var s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js';
+  s.onload=function(){
+    html2pdf().set({
+      margin: 10,
+      filename: document.title+'.pdf',
+      html2canvas: {scale:2},
+      jsPDF: {unit:'mm',format:'a4',orientation:'portrait'}
+    }).from(document.body).save();
+  };
+  document.head.appendChild(s);
+}())</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="api-hosting-info">
+                        <h3>🆓 Free Hosting Options</h3>
+                        <div class="hosting-grid">
+                            <div class="hosting-card">
+                                <strong>GitHub Pages</strong>
+                                <p>Push this app to a GitHub repo → Settings → Pages → Deploy</p>
+                                <span class="hosting-tag">Static • Unlimited</span>
+                            </div>
+                            <div class="hosting-card">
+                                <strong>Vercel</strong>
+                                <p>Connect repo or drag & drop. Auto-deploys on push.</p>
+                                <span class="hosting-tag">Serverless • 100GB/mo</span>
+                            </div>
+                            <div class="hosting-card">
+                                <strong>Cloudflare Pages</strong>
+                                <p>Free tier with unlimited bandwidth. Fastest CDN.</p>
+                                <span class="hosting-tag">Edge • Unlimited BW</span>
+                            </div>
+                            <div class="hosting-card">
+                                <strong>Netlify</strong>
+                                <p>Drag & drop deploy. 100GB bandwidth free tier.</p>
+                                <span class="hosting-tag">JAMstack • 100GB/mo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <p>Generating PDF...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
